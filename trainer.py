@@ -7,38 +7,20 @@ import argparse, sys, os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 
 import tensorflow as tf
-from data.data import *
+import numpy as np
+from data import input_data
+from models import mnist
 
 FLAGS = None
 
+
 def main(_):
-	mnist = Data().get_trains_input()
+	#tf.logging.set_verbosity(tf.logging.INFO)
 
-	# create model
-	x = tf.placeholder(tf.float32, [None, 784])
-	W = tf.Variable(tf.zeros([784, 10]))
-	b = tf.Variable(tf.zeros([10]))
-	y = tf.nn.softmax(tf.matmul(x, W) + b)
+	estimator = tf.contrib.learn.Estimator(model_fn=mnist.model)
+	print(estimator.fit(input_fn=input_data.input_fn, steps=1000))
+	# print(estimator.evaluate(input_fn=input_data.input_fn, steps=10))
 
-	# define loss and optimizer
-	y_ = tf.placeholder(tf.float32, [None, 10])
-	cross_entropy =  tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
-
-	train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
-
-	# launch model
-	sess = tf.InteractiveSession()
-	tf.global_variables_initializer().run()
-
-	# train model 1000 times
-	for _ in range(1000):
-		batch_xs, batch_ys = mnist.train.next_batch(100)
-		sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
-
-	# test trained model
-	correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
-	accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-	print(sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
