@@ -7,7 +7,6 @@ import argparse, sys, os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 
 import tensorflow as tf
-import numpy as np
 from data import input_data
 from models import mnist
 
@@ -15,11 +14,11 @@ FLAGS = None
 
 
 def main(_):
-	#tf.logging.set_verbosity(tf.logging.INFO)
+	tf.logging.set_verbosity(tf.logging.INFO)
 
 	estimator = tf.contrib.learn.Estimator(model_fn=mnist.model)
-	print(estimator.fit(input_fn=input_data.input_fn, steps=1000))
-	# print(estimator.evaluate(input_fn=input_data.input_fn, steps=10))
+	estimator.fit(input_fn=input_data.get_train_data, steps=1000)
+	print(estimator.evaluate(input_fn=input_data.get_test_data, steps=10))
 
 
 if __name__ == '__main__':
