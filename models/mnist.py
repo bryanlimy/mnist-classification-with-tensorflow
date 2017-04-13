@@ -7,8 +7,7 @@ def model(features, targets, mode):
 	b = tf.Variable(tf.zeros([10]))
 	y = tf.nn.softmax(tf.matmul(x, W) + b)
 
-	predictions = tf.argmax(y,1)
-	predictions_dict = {"results": predictions}
+	predictions_dict = {"results": y}
 
 	# define loss and optimizer
 	y_ = tf.placeholder(tf.float32, [None, 10])
@@ -17,7 +16,7 @@ def model(features, targets, mode):
 	train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
 	eval_metric_ops = {
-		"rmse": tf.metrics.root_mean_squared_error(tf.cast(targets, tf.float64), predictions)
+		"rmse": tf.metrics.root_mean_squared_error(tf.cast(targets, tf.float32), y)
 	}
 	return tf.contrib.learn.ModelFnOps(
 		mode=mode,
