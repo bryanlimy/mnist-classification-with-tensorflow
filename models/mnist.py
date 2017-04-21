@@ -10,7 +10,15 @@ def model(features, targets, mode):
 	# define loss and optimizer
 	cross_entropy =  tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=targets, logits=prediction))
 
-	train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+	train_step = tf.train.GradientDescentOptimizer(0.5).minimize(
+		loss=cross_entropy,
+		global_step=tf.contrib.framework.get_global_step(),
+		var_list=None,
+		gate_gradients=GATE_OP,
+		aggregation_method=None,
+		colocate_gradients_with_ops=False,
+		name=None,
+		grad_loss=None)
 
 	eval_metric_ops = {
 		"accuracy": tf.metrics.accuracy(labels=targets, predictions=prediction, weights=None)

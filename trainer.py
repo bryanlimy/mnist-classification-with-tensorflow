@@ -17,8 +17,6 @@ def main(_):
 	tf.logging.set_verbosity(tf.logging.INFO)
 
 	estimator = tf.contrib.learn.Estimator(model_fn=mnist.model)
-	#estimator.fit(input_fn=input_data.get_train_data, steps=1000)
-	#print(estimator.evaluate(input_fn=input_data.get_test_data, steps=10))
 
 	experiment = tf.contrib.learn.Experiment(
 		estimator=estimator,
