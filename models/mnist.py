@@ -12,13 +12,7 @@ def model(features, targets, mode):
 
 	train_step = tf.train.GradientDescentOptimizer(0.5).minimize(
 		loss=cross_entropy,
-		global_step=tf.contrib.framework.get_global_step(),
-		var_list=None,
-		gate_gradients=GATE_OP,
-		aggregation_method=None,
-		colocate_gradients_with_ops=False,
-		name=None,
-		grad_loss=None)
+		global_step=tf.contrib.framework.get_global_step())
 
 	eval_metric_ops = {
 		"accuracy": tf.metrics.accuracy(labels=targets, predictions=prediction, weights=None)

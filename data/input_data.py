@@ -2,18 +2,20 @@ import tensorflow as tf
 
 from tensorflow.examples.tutorials.mnist import input_data
 
-def get_train_data():
-	data = input_data.read_data_sets("MNIST_data/", one_hot=True)
+mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-	x = tf.constant(data.train.images)
-	y = tf.constant(data.train.labels)
+def get_train_data():
+	images, labels = mnist.train.next_batch(100)
+
+	x = tf.constant(images)
+	y = tf.constant(labels)
 
 	return x, y
 
 def get_test_data():
-	data = input_data.read_data_sets("MNIST_data/", one_hot=True)
+	images, labels = mnist.test.next_batch(100)
 
-	x = tf.constant(data.test.images)
-	y = tf.constant(data.test.labels)
+	x = tf.constant(images)
+	y = tf.constant(labels)
 
 	return x, y
