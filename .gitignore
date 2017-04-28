@@ -92,3 +92,4 @@ tensorflow/
 MNIST_data/
 .DS_Store
 .idea/
+tmp/

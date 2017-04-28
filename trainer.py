@@ -23,7 +23,9 @@ def main(_):
 
 	data = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-	estimator = tf.contrib.learn.Estimator(model_fn=model_fn)
+	estimator = tf.contrib.learn.Estimator(
+		model_fn=model_fn,
+		model_dir='tmp/training')
 
 	experiment = tf.contrib.learn.Experiment(
 		estimator=estimator,
