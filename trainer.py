@@ -7,35 +7,41 @@ import argparse, sys, os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 
 import tensorflow as tf
-from data import input_data
-from models import mnist
+from tensorflow.examples.tutorials.mnist import input_data
+
+from data.input_data import input_fn
+from models.mnist import model_fn
 
 FLAGS = None
 
+def evaluation_metrics_fn(predictions, labels):
+	correct_prediction = tf.equal(tf.argmax(labels, 1), tf.argmax(predictions, 1))
+	return tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 def main(_):
 	tf.logging.set_verbosity(tf.logging.INFO)
 
-	estimator = tf.contrib.learn.Estimator(model_fn=mnist.model)
+	data = input_data.read_data_sets("MNIST_data/", one_hot=True)
+
+	estimator = tf.contrib.learn.Estimator(model_fn=model_fn)
 
 	experiment = tf.contrib.learn.Experiment(
 		estimator=estimator,
-		train_input_fn=input_data.get_train_data,
-		eval_input_fn=input_data.get_test_data,
-		eval_metrics=None,
+		train_input_fn=lambda: input_fn(data.train, 100),
+		eval_input_fn=lambda: input_fn(data.test, 100),
+		eval_metrics={'accuracy': evaluation_metrics_fn},
 		train_steps=1000,
-		eval_steps=10, 
+		eval_steps=1,
 		train_monitors=None,
 		eval_hooks=None,
 		local_eval_frequency=None,
 		eval_delay_secs=None,
 		continuous_eval_throttle_secs=None,
-		min_eval_frequency=None,
+		min_eval_frequency=1,
 		delay_workers_by_global_step=None,
-		export_strategies=None,
-		continuous_eval_predicate_fn=None)
+		export_strategies=None)
 
-	print(experiment.train_and_evaluate())
+	experiment.train_and_evaluate()
 
 
 if __name__ == '__main__':
