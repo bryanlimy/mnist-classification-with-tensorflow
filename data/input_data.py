@@ -5,17 +5,14 @@ from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 def get_train_data():
-	images, labels = mnist.train.next_batch(100)
-
-	x = tf.constant(images)
-	y = tf.constant(labels)
-
-	return x, y
+	return input_fn(mnist.train, 100)
 
 def get_test_data():
-	images, labels = mnist.test.next_batch(100)
+	return input_fn(mnist.test, 100)
 
-	x = tf.constant(images)
-	y = tf.constant(labels)
+def input_fn(input_data, batch_size):
+	input_images = tf.constant(input_data.images)
+	input_labels = tf.constant(input_data.labels)
 
-	return x, y
+	image, label = tf.train.slice_input_producer([input_images, input_labels])
+	return tf.train.batch([image, label], batch_size=100)
