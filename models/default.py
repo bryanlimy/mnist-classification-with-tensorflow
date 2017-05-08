@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-def model_fn(features, targets, mode):
+def default_fn(features, targets, mode):
 	# create model
 	W = tf.Variable(tf.zeros([784, 10]))
 	b = tf.Variable(tf.zeros([10]))
@@ -13,10 +13,12 @@ def model_fn(features, targets, mode):
 
 	train_step = tf.train.GradientDescentOptimizer(0.5).minimize(
 		loss=cross_entropy,
-		global_step=tf.contrib.framework.get_global_step())
+		global_step=tf.contrib.framework.get_global_step()
+	)
 
 	return tf.contrib.learn.ModelFnOps(
 		mode=mode,
 		predictions=prediction,
 		loss=cross_entropy,
-		train_op=train_step)
+		train_op=train_step
+	)
