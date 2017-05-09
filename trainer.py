@@ -22,7 +22,6 @@ def evaluation_metrics_fn(predictions, labels):
 
 
 def main(_):
-
 	model_fn = default_fn
 	if FLAGS.model == "autoencoder":
 		model_fn = autoencoder_fn
@@ -40,16 +39,9 @@ def main(_):
 		train_input_fn=lambda: input_fn(data.train, 100),
 		eval_input_fn=lambda: input_fn(data.test, 100),
 		eval_metrics={'accuracy': evaluation_metrics_fn},
-		train_steps=20000,
+		train_steps=None,
 		eval_steps=1,
-		train_monitors=None,
-		eval_hooks=None,
-		local_eval_frequency=None,
-		eval_delay_secs=None,
-		continuous_eval_throttle_secs=None,
-		min_eval_frequency=1,
-		delay_workers_by_global_step=None,
-		export_strategies=None
+		min_eval_frequency=1
 	)
 
 	experiment.train_and_evaluate()

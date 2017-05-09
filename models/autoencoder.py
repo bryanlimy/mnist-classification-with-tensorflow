@@ -2,8 +2,8 @@ import tensorflow as tf
 
 
 def autoencoder_fn(features, targets, mode):
-    n_hidden_1 = 256    # 1st layer number of features
-    n_hidden_2 = 128    # 2nd layer number of features
+    n_hidden_1 = 50    # 1st layer number of features
+    n_hidden_2 = 50    # 2nd layer number of features
     n_input = 784       # MNIST data input
 
     weights = {
@@ -44,17 +44,9 @@ def autoencoder_fn(features, targets, mode):
 
     tf.summary.image("output", tf.reshape(y_prediction, [-1, 28, 28, 1]))
 
-    learning_rate = tf.train.exponential_decay(
-        learning_rate=0.1,
-        global_step=tf.contrib.framework.get_global_step(),
-        decay_steps=10000,
-        decay_rate=0.9,
-        staircase=False,
-    )
-
     cost = tf.reduce_mean(tf.pow(y_true - y_prediction, 2))
 
-    train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(
+    train_step = tf.train.AdamOptimizer(0.001).minimize(
         loss=cost,
         global_step=tf.contrib.framework.get_global_step()
     )
