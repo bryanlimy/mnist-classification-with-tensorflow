@@ -1,10 +1,14 @@
 ## MNIST Classification with Tensorflow Estimator
 
 #### How to run
-```> python trainer.py```
+- Using Gradient Descent Optimizer: ```> python trainer.py```
+- Using Adam Optimizer: ```> python trainer.py --model=autoencoder```
 
 #### TensorBoard
 ```> python -m tensorflow.tensorboard --logdir=tmp/training```
 
 #### Graph
-![alt text](images/graph.png "Main graph")
+- Gradient Descent Optimizer
+![alt text](images/gradient_descent.png "Gradient Descent Optimizer model")
+- Adam Optimizer
+![alt text](images/adam.png "Adam Optimizer")
