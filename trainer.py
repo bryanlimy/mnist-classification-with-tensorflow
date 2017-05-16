@@ -16,25 +16,28 @@ FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('model', 'default', 'default or auto-encoder model')
 
 
-def evaluation_metrics_fn(predictions, labels):
-	correct_prediction = tf.equal(tf.argmax(labels, 1), tf.argmax(predictions, 1))
-	return tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+def accuracy_fn(predictions, labels):
+    correct_prediction = tf.equal(tf.argmax(labels, 1), tf.argmax(predictions, 1))
+    return tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+def euclidean_distance_fn(predictions, labels):
+    return
 
 def main(_):
-	model_fn = default_fn
-	if FLAGS.model == "autoencoder":
-		model_fn = autoencoder_fn
+    model_fn = default_fn
+    evaluation_metrics_fn = accuracy_fn
+    if FLAGS.model == "autoencoder":
+        model_fn = autoencoder_fn
 
-	data = input_data.read_data_sets("MNIST_data/", one_hot=True)
+    data = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-	estimator = tf.contrib.learn.Estimator(
+    estimator = tf.contrib.learn.Estimator(
 		model_fn=model_fn,
 		model_dir='tmp/training',
 		config=tf.contrib.learn.RunConfig(save_checkpoints_secs=30)
 	)
 
-	experiment = tf.contrib.learn.Experiment(
+    experiment = tf.contrib.learn.Experiment(
 		estimator=estimator,
 		train_input_fn=lambda: input_fn(data.train, 100),
 		eval_input_fn=lambda: input_fn(data.test, 100),
@@ -44,9 +47,9 @@ def main(_):
 		min_eval_frequency=1
 	)
 
-	experiment.train_and_evaluate()
+    experiment.train_and_evaluate()
 
 
 if __name__ == '__main__':
-	tf.logging.set_verbosity(tf.logging.INFO)
-	tf.app.run()
+    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.app.run()
