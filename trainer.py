@@ -21,13 +21,18 @@ def accuracy_fn(predictions, labels):
     return tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 def euclidean_distance_fn(predictions, labels):
-    return
+    return tf.reduce_mean(
+        tf.sqrt(tf.reduce_sum(tf.square(tf.subtract(predictions, labels)), 1))
+    )
 
 def main(_):
     model_fn = default_fn
     evaluation_metrics_fn = accuracy_fn
-    if FLAGS.model == "autoencoder":
+    evaluation_mode = 'accuracy'
+    if FLAGS.model == 'autoencoder':
         model_fn = autoencoder_fn
+        evaluation_mode = 'euclidean distance'
+        evaluation_metrics_fn = euclidean_distance_fn
 
     data = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
@@ -39,9 +44,9 @@ def main(_):
 
     experiment = tf.contrib.learn.Experiment(
 		estimator=estimator,
-		train_input_fn=lambda: input_fn(data.train, 100),
-		eval_input_fn=lambda: input_fn(data.test, 100),
-		eval_metrics={'accuracy': evaluation_metrics_fn},
+		train_input_fn=lambda: input_fn(data.train, 100, FLAGS.model),
+		eval_input_fn=lambda: input_fn(data.test, 100, FLAGS.model),
+		eval_metrics={evaluation_mode: evaluation_metrics_fn},
 		train_steps=None,
 		eval_steps=1,
 		min_eval_frequency=1
