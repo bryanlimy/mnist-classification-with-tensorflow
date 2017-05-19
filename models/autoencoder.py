@@ -1,9 +1,9 @@
 import tensorflow as tf
 
 
-def autoencoder_fn(features, targets, mode):
-    n_hidden = 50    # layer number of features
-    n_input = 784       # MNIST data input
+def model_fn(features, targets, mode):
+    n_hidden = 50  # layer number of features
+    n_input = 784  # MNIST data input
 
     weights = {
         'encoder_h1': tf.Variable(tf.random_normal([n_input, n_hidden])),
@@ -71,7 +71,7 @@ def autoencoder_fn(features, targets, mode):
         layer_9 = tf.nn.sigmoid(tf.add(tf.matmul(layer_8, weights['encoder_h9']),
                                        biases['encoder_b9']))
         layer_10 = tf.nn.sigmoid(tf.add(tf.matmul(layer_9, weights['encoder_h10']),
-                                       biases['encoder_b10']))
+                                        biases['encoder_b10']))
         return layer_10
 
     def decoder(x):
@@ -94,7 +94,7 @@ def autoencoder_fn(features, targets, mode):
         layer_9 = tf.nn.sigmoid(tf.add(tf.matmul(layer_8, weights['decoder_h9']),
                                        biases['decoder_b9']))
         layer_10 = tf.nn.sigmoid(tf.add(tf.matmul(layer_9, weights['decoder_h10']),
-                                       biases['decoder_b10']))
+                                        biases['decoder_b10']))
         return layer_10
 
     tf.summary.image("input", tf.reshape(features, [-1, 28, 28, 1]))
