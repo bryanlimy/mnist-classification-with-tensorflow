@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from tensorflow.examples.tutorials.mnist import input_data
 from data.input_data import input_fn
-from models import softmax, autoencoder
+from models import softmax, autoencoder, lstm
 
 import tensorflow as tf
 import os, sys
@@ -86,7 +86,7 @@ def main(_):
         evaluation_mode = 'euclidean distance'
         evaluation_metrics_fn = euclidean_distance_fn
     elif FLAGS.model == 'lstm':
-        model_fn = None
+        model_fn = lstm.model_fn
 
         # From tensorflow/models/tutorials/rnn/translate/translate.py train()
         from_train, to_train, from_dev, to_dev, from_vocab, to_vocab \
@@ -117,7 +117,7 @@ def main(_):
                                         train_buckets_scale),
         eval_input_fn=lambda: input_fn(data.test, 100, FLAGS.model, train_buckets_scale),
         eval_metrics={evaluation_mode: evaluation_metrics_fn},
-        train_steps=None,
+        train_steps=50000,
         eval_steps=1,
         min_eval_frequency=1
     )
