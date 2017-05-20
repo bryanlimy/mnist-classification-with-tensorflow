@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def model_fn(features, targets, mode):
+def model_fn(features, targets, mode, params):
     n_hidden = 50  # layer number of features
     n_input = 784  # MNIST data input
 
@@ -101,7 +101,10 @@ def model_fn(features, targets, mode):
 
     encoder_op = encoder(features)
 
-    decoder_op = decoder(encoder_op)
+    if params['dropout']:
+        decoder_op = decoder(tf.nn.dropout(encoder_op, params['dropout_prob']))
+    else:
+        decoder_op = decoder(encoder_op)
 
     y_prediction = decoder_op
     y_true = features

@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def model_fn(features, targets, mode):
+def model_fn(features, targets, mode, params):
     # create model
     W = tf.Variable(tf.zeros([784, 10]))
     b = tf.Variable(tf.zeros([10]))
